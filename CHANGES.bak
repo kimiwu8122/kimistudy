@@ -1,0 +1,35 @@
+SYSTEM ERROR CHECK CHANGES
+---------------------------------------------------
+
+VERSION  DATE        CHANGES / DESCRIPTION
+1.1      2014/07/28  - Initial release
+---------------------------------------------------
+1.2      2015/4/17   - 1. Cancel "Advisory Non-Fatal Error Status" Check.
+                       2. Add Intel BroadWell DE-SOC support.
+                       3. XHCI port number re-define.
+                       4. Add reset count for user option
+-------------------------------------------------------
+V1.3     2015/5/8    1.String "PCI Test:" Change naming to "PCI SCAN Compare Test"
+--------------------------------------------------------
+V1.4     2015/10/19 1.Remove "Number of port"
+                    2.Modify USB error check log for non XHCI platform 
+------------------------------------------------------
+V1.5     2015/11/19 1. remove -all and -usb. to test USB item  
+-----------------------------------------------------
+V1.6    2017/2/17  1.Add workaround: Fixed Skyleak-SP hang up issue . BDF did/vid = BDF offset 0x100~103 AER and Lane error check skip
+                   2.Upgrade chipset configuration file for Purley platform (Skylake SP). 
+                    *\config\Platform\SupportNorthBridge
+                    *\config\Platform\SupportSouthBridge
+                    *\config\PCI\PCIName 
+                   3. Modify pciscan32 version to V1.3
+                   4. Modify SEC.sh Version to V.16 
+-----------------------------------------------------
+V1.7  2017/2/21 1. Change solution for SEC V1.6 item 1. 
+                   Using capID check if PCIE device ot not. 
+                 
+                2. Modify SupportNorthBridge.txt and SupportSouthBridge.txt 
+                   fixed "Segmentation fault" issue. 
+ 
+                3. Modify SATA screen formal for skyleak-sp platform. 
+
+

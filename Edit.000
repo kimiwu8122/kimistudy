@@ -1,0 +1,2 @@
+./testpmd -c 0xfffffff -n 2 -- -i --nb-cores=1 --nb-ports=2  --rxd=2048  --rxfreet=64 --rxpt=64 --rxht=8 --rxwt=0 --txd=2048  --txfreet=64 --txpt=64 --txht=0 --txwt=0 
+./testpmd -c 0xfffffff -n 2 -- -i --nb-cores=1 --nb-ports=2  --rxd=2048  --rxfreet=64 --rxpt=64 --rxht=8 --rxwt=0 --txd=2048  --txfreet=64 --txpt=64 --txht=0 --txwt=0 

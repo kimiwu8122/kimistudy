@@ -1,0 +1,8 @@
+all: pciscan64 clean
+pciscan64: *.o
+	gcc -m64 -Wall -static *.o -o pciscan64
+*.o: *.c
+	gcc -m64 -Wall -static -c *.c
+clean:
+	rm -f *.o
+

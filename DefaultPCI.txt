@@ -1,0 +1,40 @@
+0:0:0 8086:0c00 Bridge device
+0:1:0 8086:0c01 Intel HasWell Desktop/Mobile/Server PCI Express Controller PEG0  Cap:X8 Gen3,Status:X8 Gen3
+0:2:0 8086:0412 Display controller
+0:14:0 8086:8c31 Serial bus controllers
+0:16:0 8086:8c3a Simple communication controllers d
+0:1a:0 8086:8c2d Serial bus controllers
+0:1c:0 8086:8c10 Intel Lynx Point PCI Express Port 1 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:1 8086:8c12 Intel Lynx Point PCI Express Port 2 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:2 8086:8c14 Intel Lynx Point PCI Express Port 3 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:3 8086:8c16 Intel Lynx Point PCI Express Port 4 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:4 8086:8c18 Intel Lynx Point PCI Express Port 5 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:5 8086:8c1a Intel Lynx Point PCI Express Port 6 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:6 8086:8c1c Intel Lynx Point PCI Express Port 7 Cap:X1 Gen2,Status:X1 Gen1
+0:1c:7 8086:8c1e Intel Lynx Point PCI Express Port 8 Cap:X1 Gen2,Status:X1 Gen1
+0:1d:0 8086:8c26 Serial bus controllers
+0:1f:0 8086:8c56 Bridge device
+0:1f:3 8086:8c22 Serial bus controllers
+0:1f:6 8086:8c24 Data acquisition and signal processing controllers
+1:0:0 10b5:8724 Bridge device Cap:X8 Gen3,Status:X8 Gen3
+2:1:0 10b5:8724 Bridge device Cap:X4 Gen3,Status:X4 Gen2
+2:2:0 10b5:8724 Bridge device Cap:X4 Gen3,Status:X0 Gen1
+2:8:0 10b5:8724 Bridge device Cap:X8 Gen3,Status:X0 Gen1
+2:9:0 10b5:8724 Bridge device Cap:X4 Gen3,Status:X4 Gen2
+2:a:0 10b5:8724 Bridge device Cap:X4 Gen3,Status:X0 Gen1
+3:0:0 8086:1522 Intel I350 1GbE controller Fiber Cap:X4 Gen2,Status:X4 Gen2
+3:0:1 8086:1522 Intel I350 1GbE controller Fiber Cap:X4 Gen2,Status:X4 Gen2
+3:0:2 8086:1522 Intel I350 1GbE controller Fiber Cap:X4 Gen2,Status:X4 Gen2
+3:0:3 8086:1522 Intel I350 1GbE controller Fiber Cap:X4 Gen2,Status:X4 Gen2
+7:0:0 8086:1521 Intel I350 1GbE controller copper Cap:X4 Gen2,Status:X4 Gen2
+7:0:1 8086:1521 Intel I350 1GbE controller copper Cap:X4 Gen2,Status:X4 Gen2
+7:0:2 8086:1521 Intel I350 1GbE controller copper Cap:X4 Gen2,Status:X4 Gen2
+7:0:3 8086:1521 Intel I350 1GbE controller copper Cap:X4 Gen2,Status:X4 Gen2
+a:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+b:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+c:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+d:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+e:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+f:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+10:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1
+11:0:0 8086:1533 Intel I210 1GbE controller copper Cap:X1 Gen1,Status:X1 Gen1

@@ -1,0 +1,4 @@
+CPUResetCount 100
+WarmResetCount 100
+ColdResetCount 100
+Counter 0

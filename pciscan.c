@@ -1,0 +1,312 @@
+#include <stdio.h>
+
+
+#include "define.h"
+#include "mapmemory.h"
+#include "pci.h"
+#include "pciscan.h"
+#include "systemagent.h"
+#include "sata.h"
+#include "usb.h"
+#include "cache.h"
+#include "io.h"
+
+int main(int argc, char **argv)
+{
+	char* pgname={ PROGRAM_NAME }, *token;;
+	int i, csr=FALSE, rootport=FALSE, help=FALSE, pcitopology=FALSE, compare=FALSE, lspci=FALSE, sa=FALSE, on=FALSE, off=FALSE, usb=FALSE, sata=FALSE, ehci=FALSE, xhci=FALSE, gpio=FALSE, error=FALSE, PciAer=FALSE, PciLane=FALSE, SataError=FALSE, UsbError=FALSE, decode=FALSE, mtrr=FALSE, smrr=FALSE, emrr=FALSE;
+	int bus=-100, dev=-100, fun=-100, offset=-100, port;
+	debug = 0;
+	
+	for(i=0; i<argc; i++)
+	{
+		if(!strcmp(argv[i], "-db") && i+1 < argc)
+		{
+			debug = strtol(argv[i+1], NULL, 10);
+		}
+		else if(!strcmp(argv[i], "-csr"))
+		{
+			csr = TRUE;
+			token = strtok(argv[i+1], ":");
+			while(token != NULL)
+			{
+				if(bus == -100)
+					bus = strtol(token, NULL, 16);
+				else if(dev == -100)
+					dev = strtol(token, NULL, 16);
+				else if(fun == -100)
+					fun = strtol(token, NULL, 16);
+				else if(offset == -100)
+				{
+					offset = strtol(token, NULL, 16);
+					offset = (offset / 0x100) * 0x100;
+				}
+				token = strtok(NULL, ":");
+			}
+		}
+		else if(!strcmp(argv[i], "-PciTopology"))
+			pcitopology = TRUE;
+		else if(!strcmp(argv[i], "-RootPort"))
+			rootport = TRUE;
+		else if(!strcmp(argv[i], "-compare"))
+			compare = TRUE;
+		else if(!strcmp(argv[i], "-lspci"))
+			lspci = TRUE;
+		else if(!strcmp(argv[i], "-sa"))
+			sa = TRUE;
+		else if(!strcmp(argv[i], "-sata"))
+			sata = TRUE;
+		else if(!strcmp(argv[i], "-ehci"))
+			ehci = TRUE;
+		else if(!strcmp(argv[i], "-xhci"))
+			xhci = TRUE;
+		else if(!strcmp(argv[i], "-gpio"))
+			gpio = TRUE;
+		else if(!strcmp(argv[i], "-error") && i+1 < argc)
+		{
+			error = TRUE;
+			if(!strcmp(argv[i+1], "aer"))
+				PciAer = TRUE;
+			else if(!strcmp(argv[i+1], "lane"))
+				PciLane = TRUE;
+			else if(!strcmp(argv[i+1], "sata"))
+				SataError = TRUE;
+			else if(!strcmp(argv[i+1], "usb"))
+				UsbError = TRUE;
+		}
+		else if(!strcmp(argv[i], "-on") && i+2 < argc)
+		{
+			on = TRUE;
+			if(!strcmp(argv[i+1], "sata"))
+				sata = TRUE;
+			else if(!strcmp(argv[i+1], "usb"))
+				usb = TRUE;
+			
+			if(!strcmp(argv[i+2], "1"))
+				port = 1;
+			else if(!strcmp(argv[i+2], "2"))
+				port = 2;
+			else if(!strcmp(argv[i+2], "3"))
+				port = 3;
+			else if(!strcmp(argv[i+2], "4"))
+				port = 4;
+			else if(!strcmp(argv[i+2], "5"))
+				port = 5;
+			else if(!strcmp(argv[i+2], "6"))
+				port = 6;
+			else
+				port = 0;
+		}
+		else if(!strcmp(argv[i], "-off") && i+2 < argc)
+		{
+			off = TRUE;
+			if(!strcmp(argv[i+1], "sata"))
+				sata = TRUE;
+			else if(!strcmp(argv[i+1], "usb"))
+				usb = TRUE;
+			
+			if(!strcmp(argv[i+2], "1"))
+				port = 1;
+			else if(!strcmp(argv[i+2], "2"))
+				port = 2;
+			else if(!strcmp(argv[i+2], "3"))
+				port = 3;
+			else if(!strcmp(argv[i+2], "4"))
+				port = 4;
+			else if(!strcmp(argv[i+2], "5"))
+				port = 5;
+			else if(!strcmp(argv[i+2], "6"))
+				port = 6;
+			else
+				port = 0;
+		}
+		else if(!strcmp(argv[i], "-mtrr"))
+			mtrr = TRUE;
+		else if(!strcmp(argv[i], "-emrr"))
+			emrr = TRUE;
+		else if(!strcmp(argv[i], "-smrr"))
+			smrr = TRUE;
+		else if(!strcmp(argv[i], "-decode"))
+			decode = TRUE;
+		else if(!strcmp(argv[i], "-h"))
+			help = TRUE;
+	}
+	
+	if(argc == 1)
+		help = TRUE;
+	
+	if(help == TRUE)
+		ShowHelpMessage();
+	else if(csr == TRUE)
+	{
+		if(fun == -100)
+		{
+			printf("[Error] Unknow command!\n");
+			return 1;
+		}
+		else if(bus < 0 || bus > 0xff)
+		{
+			printf("[Error] bus range must be 0 ~ 0xff!\n");
+			return 1;
+		}
+		else if(dev < 0 || dev > 0x1f)
+		{
+			printf("[Error] dev range must be 0 ~ 0x1f!\n");
+			return 1;
+		}
+		else if(fun < 0 || fun > 7)
+		{
+			printf("[Error] fun range must be 0 ~ 7!\n");
+			return 1;
+		}
+		if(offset == -100)
+			CSRread(bus, dev, fun, 0);
+		else if(offset < 0 || offset > 0xfff)
+		{
+			printf("[Error] offset range must be 0 ~ 0xfff!\n");
+			return 1;
+		}
+		else
+			CSRread(bus, dev, fun, offset);
+	}
+	else if(pcitopology == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		PciTopology();
+	}
+	else if(rootport == TRUE)
+	{
+		GetPCIBaseAddress();
+		PciList(ROOTPORT);
+	}
+	else if(compare == TRUE)
+	{
+		GetPCIBaseAddress();
+		PciList(COMPARE);
+	}
+	else if(lspci == TRUE)
+	{
+		GetPCIBaseAddress();
+		PciList(ALL);
+	}
+	else if(sa == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		SystemAgent();
+	}
+	else if(on == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		if(sata == TRUE)
+			SATAOnOff(SATAON, port);
+		else
+			USBOnOff(USBON, port);
+	}
+	else if(off == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		if(sata == TRUE)
+			SATAOnOff(SATAOFF, port);
+		else
+			USBOnOff(USBOFF, port);
+	}
+	else if(sata == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		SATATopology(NORMAL_TYPE, TRUE);
+	}
+	else if(ehci == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		USBTopology(EHCI_MODE, NORMAL_TYPE, TRUE);
+	}
+	else if(xhci == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		USBTopology(XHCI_MODE, NORMAL_TYPE, TRUE);
+	}
+	else if(gpio == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		GPIOTopology();
+	}
+	else if(error == TRUE && PciAer == TRUE)
+	{
+                GetPCIBaseAddress();
+		PciErrorStatus(decode, "AER");		// PCIe Advanced Error Reporting
+               
+	}
+	else if(error == TRUE && PciLane == TRUE)
+	{       
+		GetPCIBaseAddress();
+		PciErrorStatus(decode, "Lane");		// PCIe Lane Error Status Register
+	}
+	else if(error == TRUE && SataError == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		SATATopology(ERROR_TYPE, decode);
+	}
+	else if(error == TRUE && UsbError == TRUE)
+	{
+		GetPCIBaseAddress();
+		ChipsetSupport();
+		USBTopology(XHCI_MODE, ERROR_TYPE, TRUE);
+	}
+	else if(mtrr == TRUE)
+	{
+		CacheMtrr();
+	}
+	else if(emrr == TRUE)
+	{
+		CacheEmrr();
+	}
+	else if(smrr == TRUE)
+	{
+		
+	}
+	else
+		ShowHelpMessage();
+	
+	return 0;
+}
+
+void ShowHelpMessage()
+{
+	printf("================================================================================\n");
+	printf("%s %s, Release Date:%s/%s\n", PROGRAM_NAME, VERSION, RELEASE_YEAR, RELEASE_DATE);
+	printf("Copyright (C) %s by %s\n", RELEASE_YEAR, AUTHOR);
+	printf("================================================================================\nUsage:\n");
+	
+	printf("%-30s%s%-30s\n","#pciscan -csr Bus:Dev:Fun","=> ","Show PCI CSR");
+	printf("%-30s%s%-30s\n","#pciscan -PciTopology","=> ","Show PCI Topology");
+	printf("%-30s%s%-30s\n","#pciscan -RootPort","=> ","Show PCI Root Port Link Status");
+	printf("%-30s%s%-30s\n","#pciscan -compare","=> ","Compare PCI Device Count");
+	printf("%-30s%s%-30s\n","#pciscan -lspci","=> ","Show All PCI List");
+	printf("%-30s%s%-30s\n","#pciscan -sa","=> ","Show System Agent Info");
+	printf("%-30s%s%-30s\n","#pciscan -sata","=> ","Show SATA Controller Topology");
+	printf("%-30s%s%-30s\n","#pciscan -ehci","=> ","Show EHCI Controller Topology");
+	printf("%-30s%s%-30s\n","#pciscan -xhci","=> ","Show XHCI Controller Topology");
+	printf("%-30s%s%-30s\n","#pciscan -gpio","=> ","Show GPIO Topology");
+	printf("%-30s%s%-30s\n","#pciscan -error aer","=> ","Show PCIe AER");
+	printf("%-30s%s%-30s\n","#pciscan -error aer -decode","=> ","Decode All PCIe AER");
+	printf("%-30s%s%-30s\n","#pciscan -error lane","=> ","Show PCIe Lane Error");
+	printf("%-30s%s%-30s\n","#pciscan -error lane -decode","=> ","Decode All PCIe Lane Error");
+	printf("%-30s%s%-30s\n","#pciscan -error sata","=> ","Show SATA Error Status");
+	printf("%-30s%s%-30s\n","#pciscan -error sata -decode","=> ","Decode All SATA Error Status");
+	printf("%-30s%s%-30s\n","#pciscan -error usb","=> ","Show USB Error Status");
+	printf("%-30s%s%-30s\n","#pciscan -error usb -decode","=> ","Decode All USB Error Status");
+	printf("%-30s%s%-30s\n","#pciscan -h","=> ","Show command line help");
+	printf("%-30s%s%-30s\n","#pciscan -db num","=> ","Debug Level (1 ~ 4)");
+}
+
+
+
